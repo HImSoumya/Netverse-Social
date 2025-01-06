@@ -5,6 +5,7 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const userRouter = require("./routes/users");
 const authRouter = require("./routes/auth");
+const postRouter = require("./routes/posts")
 
 const app = express();
 dotenv.config();
@@ -18,6 +19,7 @@ app.use(morgan("common"));
 // Routes
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/posts",postRouter)
 
 // DB-Connection
 async function connectDB() {
