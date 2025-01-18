@@ -18,7 +18,7 @@ export default function Sidebar() {
   return (
     <div
       style={{ height: "calc(100vh - 60px)" }}
-      className="flex-[3] overflow-y-scroll bg-gray-50"
+      className="flex-[3] overflow-y-scroll bg-gray-50 "
     >
       <div className="p-6">
         <ul className="flex flex-col justify-start items-start gap-3 mb-6">

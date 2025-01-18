@@ -20,23 +20,23 @@ export default function Share() {
             placeholder="What's in your mind?"
           />
         </div>
-        <div className="w-full h-[1px] bg-gray-700"></div>
-        <div className="top w-full flex justify-between items-center ">
+        <div className="w-full h-[1px] bg-gray-500"></div>
+        <div className="top w-full flex justify-between items-center gap-4">
           <div className="flex justify-between items-center gap-3">
             <div className="flex justify-start items-center gap-1">
-              <FaPhotoVideo className="text-xl text-red-600" />
+              <FaPhotoVideo className="text-lg text-red-600" />
               <span className="text-[14px] font-semibold">Photo or Video</span>
             </div>
             <div className="flex justify-start items-center gap-1">
-              <FaTag className="text-xl text-blue-700" />
+              <FaTag className="text-lg text-blue-700" />
               <span className="text-[14px] font-semibold">Tag</span>
             </div>
             <div className="flex justify-start items-center gap-1">
-              <FaLocationDot className="text-xl text-green-700" />
+              <FaLocationDot className="text-lg text-green-700" />
               <span className="text-[14px] font-semibold">Location</span>
             </div>
             <div className="flex justify-start items-center gap-1">
-              <IoIosHappy className="text-xl text-yellow-500" />
+              <IoIosHappy className="text-lg text-yellow-500" />
               <span className="text-[14px] font-semibold">Feelings</span>
             </div>
           </div>

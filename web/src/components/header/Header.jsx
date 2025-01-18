@@ -7,7 +7,7 @@ import img1 from "../../assets/persons/my.jpg";
 
 export default function Header() {
   return (
-    <div className="w-full bg-indigo-700 h-[60px] flex items-center justify-center gap-2 px-6">
+    <div className="w-full bg-indigo-700 h-[60px] flex items-center justify-center gap-2 px-6 sticky top-0 z-10">
       <div className="box1 w-full">
         <h1 className="text-xl text-white font-normal">NetVerse</h1>
       </div>
