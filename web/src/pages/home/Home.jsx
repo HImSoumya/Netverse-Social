@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <div className="homecontainer w-full flex ">
+      <div className="homecontainer w-full flex">
         <Sidebar />
         <Feed />
         <Rightbar />

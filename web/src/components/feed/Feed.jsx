@@ -1,16 +1,15 @@
 import Post from "../postcard/Post";
 import Share from "../shared/Share";
+import { Posts } from "../../data/DummyData";
 
 export default function Feed() {
   return (
-    <div
-      style={{ height: "calc(100vh - 60px)" }}
-      className="flex-[5.5]"
-    >
+    <div className="flex-[5.5]">
       <div className="p-6">
         <Share />
-        <Post/>
-        <Post/> 
+        {Posts.map((p) => (
+          <Post key={p.id} post={p}/>
+        ))} 
       </div>
     </div>
   );

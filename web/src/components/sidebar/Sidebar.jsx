@@ -8,17 +8,15 @@ import { PiSuitcaseSimple } from "react-icons/pi";
 import { MdEvent } from "react-icons/md";
 import { FaGraduationCap } from "react-icons/fa6";
 
-import img1 from "../../assets/persons/img1.jpg";
-import img2 from "../../assets/persons/img2.jpg";
-import img3 from "../../assets/persons/img3.jpg";
-import img4 from "../../assets/persons/img4.jpg";
-import img5 from "../../assets/persons/img5.jpg";
+import { Users } from "../../data/DummyData";
+import FriendList from "../friendlist/FriendList";
+ 
 
 export default function Sidebar() {
   return (
     <div
       style={{ height: "calc(100vh - 60px)" }}
-      className="flex-[3] overflow-y-scroll bg-gray-50 "
+      className="flex-[3] overflow-y-scroll bg-gray-50 sticky top-[60px]"
     >
       <div className="p-6">
         <ul className="flex flex-col justify-start items-start gap-3 mb-6">
@@ -61,46 +59,11 @@ export default function Sidebar() {
         </ul>
         <hr />
         <ul className="mt-6 flex flex-col  justify-start items-start gap-3">
-          <li className="flex justify-start items-center gap-2">
-            <img
-              className="w-[32px] h-32px rounded-full object-cover "
-              src={img1}
-              alt=""
-            />
-            <span className="text-sm mt-1 font-medium">Amrita Singh</span>
-          </li>
-          <li className="flex justify-start items-center gap-2">
-            <img
-              className="w-[32px] h-32px rounded-full object-cover"
-              src={img2}
-              alt=""
-            />
-            <span className="text-sm mt-1 font-medium">Nityasha Mohanty</span>
-          </li>
-          <li className="flex justify-start items-center gap-2">
-            <img
-              className="w-[32px] h-32px rounded-full object-cover"
-              src={img3}
-              alt=""
-            />
-            <span className="text-sm mt-1 font-medium">Abhilash Lenka</span>
-          </li>
-          <li className="flex justify-start items-center gap-2">
-            <img
-              className="w-[32px] h-32px rounded-full object-cover"
-              src={img4}
-              alt=""
-            />
-            <span className="text-sm mt-1 font-medium">Subhalaxmi Naik</span>
-          </li>
-          <li className="flex justify-start items-center gap-2">
-            <img
-              className="w-[32px] h-32px rounded-full object-cover"
-              src={img5}
-              alt=""
-            />
-            <span className="text-sm mt-1 font-medium">Prabeen Behera</span>
-          </li>
+         {
+          Users.map((u)=>(
+            <FriendList key={u.id} user={u}/>
+          ))
+         }
         </ul>
       </div>
     </div>

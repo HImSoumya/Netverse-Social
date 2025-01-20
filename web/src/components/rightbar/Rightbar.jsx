@@ -1,17 +1,13 @@
+/* eslint-disable react/prop-types */
 import img1 from "../../assets/gift.png";
 import img2 from "../../assets/ads.jpg";
-import p1 from "../../assets/persons/img1.jpg";
-import p2 from "../../assets/persons/img2.jpg";
-import p3 from "../../assets/persons/img3.jpg";
-import p4 from "../../assets/persons/img4.jpg";
-import p5 from "../../assets/persons/img5.jpg";
-export default function Rightbar() {
-  return (
-    <div
-      style={{ height: "calc(100vh - 60px)" }}
-      className="flex-[3.5]"
-    >
-      <div className="p-6">
+import OnlineFriends from "../onlinefriends/OnlineFriends";
+import { Users } from "../../data/DummyData";
+
+export default function Rightbar({profile}) {
+  const HomeRightBar = () => {
+    return (
+      <>
         <div className="flex justify-start items-center gap-2">
           <img className="w-[35px] h-[35px]" src={img1} alt="" />
           <span className="text-[14px] font-normal">
@@ -35,35 +31,57 @@ export default function Rightbar() {
         <div className="mt-6">
           <h1 className="text-lg text-gray-600">Online Friends</h1>
           <ul className="mt-2 flex flex-col justify-center items-start gap-4">
-            <li className="flex justify-start items-center gap-2 relative">
-              <img
-                className="w-[40px] h-[40px] object-cover rounded-full"
-                src={p1}
-                alt=""
-              />
-              <span className="text-[15px]">Amrita Singh</span>
-              <div className="w-[15px] h-[15px] bg-green-500 border border-white rounded-full absolute left-6 top-0"></div>
-            </li>
-            <li className="flex justify-start items-center gap-2 relative">
-              <img
-                className="w-[40px] h-[40px] object-cover rounded-full"
-                src={p4}
-                alt=""
-              />
-              <span className="text-[15px]">Subhalaxmi Naik</span>
-              <div className="w-[15px] h-[15px] bg-green-500 border border-white rounded-full absolute left-6 top-0"></div>
-            </li>
-            <li className="flex justify-start items-center gap-2 relative">
-              <img
-                className="w-[40px] h-[40px] object-cover rounded-full"
-                src={p2}
-                alt=""
-              />
-              <span className="text-[15px]">Nityasha Mohanty</span>
-              <div className="w-[15px] h-[15px] bg-green-500 border border-white rounded-full absolute left-6 top-0"></div>
-            </li>
+            {Users.map((u) => (
+              <OnlineFriends key={u.id} user={u} />
+            ))}
           </ul>
         </div>
+      </>
+    );
+  };
+
+  const ProfileRightBar = () => {
+    return (
+      <>
+        <h4 className="text-lg">{`Soumya's Information`}</h4>
+        <div className="mt-1 flex flex-col justify-start items-start gap-2  ">
+          <div className="flex justify-start items-center gap-4 text-sm text-gray-600">
+            <span>City :</span>
+            <span>Bhubaneswar</span>
+          </div>
+          <div className="flex justify-start items-center gap-4 text-sm text-gray-600">
+            <span>From :</span>
+            <span>Baripada</span>
+          </div>
+          <div className="flex justify-start items-center gap-4 text-sm text-gray-600">
+            <span>Relationship :</span>
+            <span>Single</span>
+          </div>
+        </div>
+        <h4 className="text-lg mt-4">{`Soumya's Friends`}</h4>
+        <div className="mt-1 w-full grid grid-cols-3 gap-4">
+          {Users.filter((u) => u.id != 1).map((u) => (
+            <div key={u.id} className=" cursor-pointer mb-4">
+              <img
+                className="w-[100px] h-[100px] rounded-md"
+                src={u.profilePicture}
+                alt=""
+              />
+              <span className="text-[14px] font-semibold">
+                {u.username.length >= 5
+                  ? u.username.slice(0, 8) + "..."
+                  : u.username}
+              </span>
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  };
+  return (
+    <div className="flex-[3.5]">
+      <div className="p-6">
+        {profile?<ProfileRightBar />:<HomeRightBar />}
       </div>
     </div>
   );
