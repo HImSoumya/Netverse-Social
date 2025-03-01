@@ -15,7 +15,7 @@ export default function Share() {
             alt=""
           />
           <input
-            className="w-full p-1 outline-none text-sm"
+            className="w-full p-1 outline-none text-sm border-none focus:outline-none"
             type="text"
             placeholder="What's in your mind?"
           />

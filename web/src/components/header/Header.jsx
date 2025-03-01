@@ -4,12 +4,13 @@ import { IoSearchOutline } from "react-icons/io5";
 import { HiUserCircle } from "react-icons/hi2";
 
 import img1 from "../../assets/persons/my.jpg";
+import { Link } from "react-router-dom";
 
 export default function Header() {
   return (
     <div className="w-full bg-indigo-700 h-[60px] flex items-center justify-center gap-2 px-6 sticky top-0 z-10">
       <div className="box1 w-full">
-        <h1 className="text-xl text-white font-normal">NetVerse</h1>
+        <Link to='/' className="text-xl text-white font-normal">Netverse</Link>
       </div>
       <div className="box2 w-full">
         <div className="searchbar w-full h-[30px] bg-white rounded-md flex justify-items-start items-center px-2 gap-1">

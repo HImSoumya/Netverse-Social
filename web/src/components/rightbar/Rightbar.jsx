@@ -4,7 +4,7 @@ import img2 from "../../assets/ads.jpg";
 import OnlineFriends from "../onlinefriends/OnlineFriends";
 import { Users } from "../../data/DummyData";
 
-export default function Rightbar({profile}) {
+export default function Rightbar({user}) {
   const HomeRightBar = () => {
     return (
       <>
@@ -43,19 +43,19 @@ export default function Rightbar({profile}) {
   const ProfileRightBar = () => {
     return (
       <>
-        <h4 className="text-lg">{`Soumya's Information`}</h4>
+        <h4 className="text-lg">{`${user.username}'s Information`}</h4>
         <div className="mt-1 flex flex-col justify-start items-start gap-2  ">
           <div className="flex justify-start items-center gap-4 text-sm text-gray-600">
             <span>City :</span>
-            <span>Bhubaneswar</span>
+            <span>{user.city}</span>
           </div>
           <div className="flex justify-start items-center gap-4 text-sm text-gray-600">
             <span>From :</span>
-            <span>Baripada</span>
+            <span>{user.from}</span>
           </div>
           <div className="flex justify-start items-center gap-4 text-sm text-gray-600">
             <span>Relationship :</span>
-            <span>Single</span>
+            <span>{user.relationship === 1? "Single" : user.relationship === 2? "Married":"-----"}</span>
           </div>
         </div>
         <h4 className="text-lg mt-4">{`Soumya's Friends`}</h4>
@@ -81,7 +81,7 @@ export default function Rightbar({profile}) {
   return (
     <div className="flex-[3.5]">
       <div className="p-6">
-        {profile?<ProfileRightBar />:<HomeRightBar />}
+        {user?<ProfileRightBar />:<HomeRightBar />}
       </div>
     </div>
   );

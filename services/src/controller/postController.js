@@ -69,17 +69,28 @@ exports.getPost = async (req, res) => {
 };
 
 // get userFeed posts
-exports.getUserFeedPosts = async (req,res)=>{ 
+exports.getUserFeedPosts = async (req, res) => {
   try {
-    const currentUser = await User.findById(req.body.userId)
-    const userPosts = await Post.find({userId:currentUser._id})
+    const currentUser = await User.findById(req.params.userid);
+    const userPosts = await Post.find({ userId: currentUser._id });
     const friendPosts = await Promise.all(
-      currentUser.followings.map(friendId=>{
-        return Post.find({userId:friendId})
+      currentUser.followings.map((friendId) => {
+        return Post.find({ userId: friendId });
       })
-    ) 
-    res.json(userPosts.concat(...friendPosts))
+    );
+    res.json(userPosts.reverse().concat(...friendPosts));
   } catch (error) {
-    res.status(500).json(error)
+    res.status(500).json(error);
   }
-}
+};
+
+// get user's Feed posts
+exports.getUserPosts = async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.username });
+    const posts = await Post.find({ userId: user._id });
+    res.status(200).json(posts.reverse());
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};

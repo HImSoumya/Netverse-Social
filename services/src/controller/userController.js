@@ -42,11 +42,7 @@ exports.login = async (req, res) => {
       { expiresIn: "7d" } // Token expiration set to 7 days
     );
 
-    res.status(200).json({
-      message: "Login successful",
-      token,
-      user,
-    });
+    res.status(200).json(user);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -100,12 +96,26 @@ exports.deleteUser = async (req, res) => {
 
 // Get single user
 exports.getSingleUser = async (req, res) => {
+  const { userId, username } = req.query;
+
   try {
-    const user = await User.findById(req.params.id);
+    let user;
+    if (userId) {
+      user = await User.findById(userId);
+    } else if (username) {
+      user = await User.findOne({ username });
+    } else {
+      return res.status(400).json({ error: "User ID or username is required" });
+    }
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
     const { password, createdAt, updatedAt, ...others } = user._doc;
     res.status(200).json(others);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -118,7 +128,7 @@ exports.followUser = async (req, res) => {
       if (!user.followers.includes(req.body.userId)) {
         await user.updateOne({ $push: { followers: req.body.userId } });
         await currentUser.updateOne({ $push: { followings: req.params.id } });
-        res.status(200).json({message:"User has been followed."})
+        res.status(200).json({ message: "User has been followed." });
       } else {
         res
           .status(403)
@@ -141,11 +151,9 @@ exports.unfollowUser = async (req, res) => {
       if (user.followers.includes(req.body.userId)) {
         await user.updateOne({ $pull: { followers: req.body.userId } });
         await currentUser.updateOne({ $pull: { followings: req.params.id } });
-        res.status(200).json({message:"User has been unfollowed."})
+        res.status(200).json({ message: "User has been unfollowed." });
       } else {
-        res
-          .status(403)
-          .json({ message: "You have unfollowed this user." });
+        res.status(403).json({ message: "You have unfollowed this user." });
       }
     } catch (error) {
       res.status(400).json({ error: error.message });

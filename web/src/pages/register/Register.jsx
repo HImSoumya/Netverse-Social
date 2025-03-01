@@ -1,5 +1,6 @@
 import { useState } from "react"; 
 import { FaBattleNet } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 export default function Register() {
     const [showPassword, setShowPassword] = useState(false);
@@ -74,12 +75,12 @@ export default function Register() {
         </form>
         <div className="mt-6 text-center text-sm text-gray-600 mb-1">
           {`Have an account?`}
-          <a
-            href="#"
+          <Link
+            to="/auth/login"
             className="text-indigo-600 hover:text-indigo-500 font-medium"
           >
             Login
-          </a>
+          </Link>
         </div>
       </div>
     </div>
