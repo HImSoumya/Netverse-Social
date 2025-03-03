@@ -6,8 +6,7 @@ const AuthReducer = (state, action) => {
         isFetching: true,
         error: null,
       };
-    case "LOGIN_SUCCESS":
-      localStorage.setItem("user", JSON.stringify(action.payload));
+    case "LOGIN_SUCCESS": 
       return {
         user: action.payload,
         isFetching: false,

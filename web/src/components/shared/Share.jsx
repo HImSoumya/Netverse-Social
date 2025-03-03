@@ -1,32 +1,69 @@
-import img1 from "../../assets/persons/my.jpg";
+import { useContext, useRef, useState } from "react";
 import { FaPhotoVideo } from "react-icons/fa";
 import { FaTag } from "react-icons/fa6";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoIosHappy } from "react-icons/io";
+import { AuthContext } from "../../context/AuthContext";
+import defaultImg from "../../assets/DefaultProfileImg.png";
+import axios from "axios";
 
 export default function Share() {
+  const { user } = useContext(AuthContext);
+  const desc = useRef();
+  const [file, setFile] = useState(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(desc.current.value);
+    const newPost = {
+      userId: user._id.$oid,
+      desc: desc.current.value,
+    };
+    try {
+      await axios.post("http://localhost:8800/api/posts", newPost);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div>
-      <div className="w-full h-[200px] border rounded-md shadow-md p-2 flex flex-col justify-around items-start">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full h-[200px] border rounded-md shadow-md p-2 flex flex-col justify-around items-start"
+      >
         <div className="top w-full flex justify-start items-center">
           <img
             className="w-[40px] h-[40px] rounded-full object-cover"
-            src={img1}
+            src={user.profilePicture ? user.profilePicture : defaultImg}
             alt=""
           />
           <input
+            ref={desc}
             className="w-full p-1 outline-none text-sm border-none focus:outline-none"
             type="text"
-            placeholder="What's in your mind?"
+            placeholder={`What's in your mind ${user.username}?`}
           />
         </div>
         <div className="w-full h-[1px] bg-gray-500"></div>
         <div className="top w-full flex justify-between items-center gap-4">
           <div className="flex justify-between items-center gap-3">
-            <div className="flex justify-start items-center gap-1">
+            <label
+              htmlFor="file"
+              className="flex justify-start items-center gap-1 cursor-pointer"
+            >
               <FaPhotoVideo className="text-lg text-red-600" />
-              <span className="text-[14px] font-semibold">Photo or Video</span>
-            </div>
+              <span className="text-[14px] font-semibold cursor-pointer">
+                Photo or Video
+              </span>
+              <input
+                className="hidden"
+                onChange={(e) => setFile(e.target.files[0])}
+                type="file"
+                id="file"
+                accept=".png,.jpg,.jpeg"
+              />
+            </label>
             <div className="flex justify-start items-center gap-1">
               <FaTag className="text-lg text-blue-700" />
               <span className="text-[14px] font-semibold">Tag</span>
@@ -40,11 +77,14 @@ export default function Share() {
               <span className="text-[14px] font-semibold">Feelings</span>
             </div>
           </div>
-          <button className="bg-indigo-700 text-white text-[14px] px-4 py-1 rounded-md">
+          <button
+            type="submit"
+            className="bg-indigo-700 text-white text-[14px] px-4 py-1 rounded-md"
+          >
             Share
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

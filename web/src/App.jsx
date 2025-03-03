@@ -9,24 +9,38 @@ import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import Profile from "./pages/profile/Profile";
+import { useContext } from "react";
+import { AuthContext } from "./context/AuthContext";
 
 function App() {
-  let user = null;
-  try {
-    user = JSON.parse(localStorage.getItem("user")) || null;
-  } catch (error) {
-    console.error("Error parsing user data:", error);
-    user = null;
-  }
-
+  // let user = null;
+  // try {
+  //   user = JSON.parse(localStorage.getItem("user")) || null;
+  // } catch (error) {
+  //   console.error("Error parsing user data:", error);
+  //   user = null;
+  // }
+  const { user } = useContext(AuthContext);
   return (
     <>
       <Router>
         <Routes>
-          <Route path="/" element={user ? <Home /> : <Navigate to="/auth/login" />} />
-          <Route path="/auth/login" element={user ? <Navigate to="/" /> : <Login />} />
-          <Route path="/auth/register" element={user ? <Navigate to="/" /> : <Register />} />
-          <Route path="/profile/:username" element={user ? <Profile /> : <Navigate to="/auth/login" />} />
+          <Route
+            path="/"
+            element={user ? <Home /> : <Navigate to="/auth/login" />}
+          />
+          <Route
+            path="/auth/login"
+            element={user ? <Navigate to="/" /> : <Login />}
+          />
+          <Route
+            path="/auth/register"
+            element={user ? <Navigate to="/" /> : <Register />}
+          />
+          <Route
+            path="/profile/:username"
+            element={user ? <Profile /> : <Navigate to="/auth/login" />}
+          />
         </Routes>
       </Router>
     </>

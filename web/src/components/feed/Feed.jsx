@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Post from "../postcard/Post";
 import Share from "../shared/Share";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function Feed({ username }) {
   const [posts, setPosts] = useState([]);
-
+  const { user } = useContext(AuthContext);
   useEffect(() => {
     const getPosts = async () => {
       try {
@@ -15,7 +16,7 @@ export default function Feed({ username }) {
               `http://localhost:8800/api/posts/profile/${username}`
             )
           : await axios.get(
-              "http://localhost:8800/api/posts/timeline/67975d77ace30e98a218bc9f"
+              `http://localhost:8800/api/posts/timeline/${user._id.$oid}`
             );
         setPosts(res.data);
       } catch (error) {
@@ -23,7 +24,7 @@ export default function Feed({ username }) {
       }
     };
     getPosts();
-  }, [username]);
+  }, [user._id.$oid, username]);
   return (
     <div className="flex-[5.5]">
       <div className="p-6">

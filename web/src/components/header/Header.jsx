@@ -3,14 +3,19 @@ import { IoChatboxEllipses } from "react-icons/io5";
 import { IoSearchOutline } from "react-icons/io5";
 import { HiUserCircle } from "react-icons/hi2";
 
-import img1 from "../../assets/persons/my.jpg";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import defaultImg from "../../assets/DefaultProfileImg.png";
 
 export default function Header() {
+  const { user } = useContext(AuthContext);
   return (
     <div className="w-full bg-indigo-700 h-[60px] flex items-center justify-center gap-2 px-6 sticky top-0 z-10">
       <div className="box1 w-full">
-        <Link to='/' className="text-xl text-white font-normal">Netverse</Link>
+        <Link to="/" className="text-xl text-white font-normal">
+          Netverse
+        </Link>
       </div>
       <div className="box2 w-full">
         <div className="searchbar w-full h-[30px] bg-white rounded-md flex justify-items-start items-center px-2 gap-1">
@@ -46,13 +51,13 @@ export default function Header() {
             </div>
           </div>
         </div>
-        <div>
+        <Link to={`/profile/${user.username}`}>
           <img
-            src={img1}
+            src={user.profilPicture ? user.profilPicture : defaultImg}
             className="w-[32px] h-[32px] rounded-full object-cover"
             alt=""
           />
-        </div>
+        </Link>
       </div>
     </div>
   );

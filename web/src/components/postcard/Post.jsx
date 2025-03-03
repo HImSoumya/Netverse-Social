@@ -2,22 +2,23 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
 import like from "../../assets/like.png";
 import heart from "../../assets/heart.png";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import defaultImg from "../../assets/DefaultProfileImg.png";
 import postImg from "../../assets/posts/p1.jpg";
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function Post({ post }) {
   const [user, setUser] = useState({});
-
+  const { user: currentUser } = useContext(AuthContext);
   const [postLike, setPostLike] = useState(post.likes.length);
   const [isLiked, setIsLiked] = useState(false);
-  const handleLike = () => {
-    setPostLike(isLiked ? postLike - 1 : postLike + 1);
-    setIsLiked(!isLiked);
-  };
+
+  useEffect(() => {
+    setIsLiked(post.likes.includes(currentUser._id));
+  }, [currentUser._id, post.likes]);
 
   useEffect(() => {
     const getUser = async () => {
@@ -32,6 +33,18 @@ export default function Post({ post }) {
     };
     getUser();
   }, [post.userId]);
+
+  const handleLikes = async () => {
+    try {
+      await axios.put(`http://localhost:8800/api/posts/${post._id}/like`, {
+        userId: currentUser._id,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    setPostLike(isLiked ? postLike - 1 : postLike + 1);
+    setIsLiked(!isLiked);
+  };
 
   return (
     <div className="w-full h-auto mt-4 border p-2 shadow-md rounded-md">
@@ -65,13 +78,13 @@ export default function Post({ post }) {
         <div className="w-full flex justify-between items-center">
           <div className="flex justify-start items-center gap-2">
             <img
-              onClick={handleLike}
+              onClick={handleLikes}
               className="w-[24px] h-[24px] cursor-pointer"
               src={like}
               alt=""
             />
             <img
-              onClick={handleLike}
+              onClick={handleLikes}
               className="w-[24px] h-[24px] cursor-pointer"
               src={heart}
               alt=""
