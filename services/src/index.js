@@ -7,6 +7,7 @@ const cors = require("cors");
 const userRouter = require("./routes/users");
 const authRouter = require("./routes/auth");
 const postRouter = require("./routes/posts");
+const multer  = require('multer')
 
 const app = express();
 dotenv.config();
@@ -14,9 +15,12 @@ port = process.env.PORT;
 
 // middleware
 app.use(express.json());
+app.use(express.urlencoded({extended: true}))
 app.use(helmet());
 app.use(morgan("common"));
 app.use(cors());
+
+app.use("/uploads", express.static("uploads"));
 
 // Routes
 app.use("/api/users", userRouter);

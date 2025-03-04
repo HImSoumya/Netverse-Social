@@ -1,16 +1,49 @@
 const Post = require("../model/Post");
 const User = require("../model/User");
+require("dotenv").config();
+
+const cloudinary = require("cloudinary").v2;
+
+// 🔥 Configure Cloudinary
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET_KEY,
+});
 
 // Create a Post
 exports.createPost = async (req, res) => {
-  const newPost = new Post(req.body);
   try {
+    console.log("🔥 Request Received:", req.body);
+    console.log("🖼️ File Received:", req.file);
+
+    let imageUrl = null;
+
+    // Upload file to Cloudinary if an image is present
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "social-media-posts",
+      });
+      imageUrl = result.secure_url; // Get Cloudinary URL
+    }
+
+    const newPost = new Post({
+      userId: req.body.userId,
+      desc: req.body.desc,
+      img: imageUrl, // Store Cloudinary URL in MongoDB
+    });
+
     const savedPost = await newPost.save();
-    res.status(200).json(savedPost);
+    console.log("✅ Post saved successfully:", savedPost);
+    res.status(201).json(savedPost);
   } catch (error) {
-    res.status(500).json(error);
+    console.error("❌ Error creating post:", error);
+    res.status(500).json({ message: "Something went wrong" });
   }
 };
+
+
 
 // Update a post
 exports.updatePost = async (req, res) => {
@@ -78,7 +111,7 @@ exports.getUserFeedPosts = async (req, res) => {
         return Post.find({ userId: friendId });
       })
     );
-    res.json(userPosts.reverse().concat(...friendPosts));
+    res.json(userPosts.concat(...friendPosts));
   } catch (error) {
     res.status(500).json(error);
   }
@@ -89,7 +122,7 @@ exports.getUserPosts = async (req, res) => {
   try {
     const user = await User.findOne({ username: req.params.username });
     const posts = await Post.find({ userId: user._id });
-    res.status(200).json(posts.reverse());
+    res.status(200).json(posts);
   } catch (error) {
     res.status(500).json(error);
   }

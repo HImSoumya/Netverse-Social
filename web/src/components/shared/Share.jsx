@@ -14,13 +14,19 @@ export default function Share() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(desc.current.value);
-    const newPost = {
-      userId: user._id.$oid,
-      desc: desc.current.value,
-    };
+
+    const formData = new FormData();
+    formData.append("userId", user._id.$oid);
+    formData.append("desc", desc.current.value);
+    if (file) {
+      formData.append("image", file); // Append the selected image
+    }
+
     try {
-      await axios.post("http://localhost:8800/api/posts", newPost);
+      await axios.post("http://localhost:8800/api/posts", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      window.location.reload;
     } catch (error) {
       console.log(error);
     }

@@ -4,8 +4,7 @@ import like from "../../assets/like.png";
 import heart from "../../assets/heart.png";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import defaultImg from "../../assets/DefaultProfileImg.png";
-import postImg from "../../assets/posts/p1.jpg";
+import defaultImg from "../../assets/DefaultProfileImg.png"; 
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
@@ -71,7 +70,7 @@ export default function Post({ post }) {
         <div>
           <img
             className="w-full max-h-[500px] object-cover"
-            src={post.photo ? post.photo : postImg}
+            src={post.img ? post.img : null}
             alt=""
           />
         </div>
