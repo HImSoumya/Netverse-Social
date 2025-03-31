@@ -64,16 +64,21 @@ exports.updatePost = async (req, res) => {
 exports.deletePost = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
-    if (post.userId === req.body.userId) {
+    if (!post) {
+      return res.status(404).json({ message: "Post not found." });
+    }
+
+    if (post.userId === req.query.userId) {
       await post.deleteOne();
-      res.status(200).json({ message: "The post has been deleted." });
+      return res.status(200).json({ message: "The post has been deleted." });
     } else {
-      res.status(403).json({ message: "You can only delete your post." });
+      return res.status(403).json({ message: "You can only delete your own post." });
     }
   } catch (error) {
-    res.status(500).json(error);
+    return res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
+
 
 // like & dislike a post
 exports.likePost = async (req, res) => {

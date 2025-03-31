@@ -2,31 +2,32 @@ import Header from "../../components/header/Header";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Feed from "../../components/feed/Feed";
 import Rightbar from "../../components/rightbar/Rightbar";
-import defaultCoverImg from "../../assets/posts/p5.jpg";
-import defaultProfileImg from "../../assets/DefaultProfileImg.png";
+import defaultCoverImg from "../../assets/p5.jpg";
+import boyImg from "../../assets/boy.png";
+import girlImg from "../../assets/girl.png";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { FiEdit } from "react-icons/fi";
+import AuthContext from "../../context/AuthContext";
+import FormModal from "../../components/modal/FormModal";
 
 export default function Profile() {
-  const { username } = useParams();
   const [user, setUser] = useState({});
-
+  const [showModal, setShowModal] = useState(false);
+  const { username } = useParams();
+  const { user: currentUser } = useContext(AuthContext);
   useEffect(() => {
-    const getUser = async () => {
+    const getUsersDetails = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:8800/api/users?username=${username}`
-        );
+        const res = await axios.get(`/api/users?username=${username}`);
         setUser(res.data);
       } catch (error) {
         console.log(error);
       }
     };
-    getUser();
+    getUsersDetails();
   }, [username]);
-
-  console.log(username);
   return (
     <>
       <Header />
@@ -42,15 +43,25 @@ export default function Profile() {
               />
               <img
                 src={
-                  user.profilePicture ? user.profilePicture : defaultProfileImg
+                  user.gender === "Male" ? boyImg : girlImg
                 }
                 className="w-[150px] h-[150px] object-cover rounded-full absolute left-0 right-0 m-auto top-[160px] border-2 border-white"
                 alt=""
               />
             </div>
             <div className="flex flex-col justify-center items-center">
-              <span className="text-[20px] font-semibold">{user.username}</span>
-              <span className="text-sm text-gray-700">{user.desc}</span>
+              <span className="text-[20px] font-semibold flex items-center gap-4">
+                {user.username}
+                {currentUser.username === user.username ? (
+                  <FiEdit
+                    onClick={() => setShowModal(true)}
+                    className="text-sm cursor-pointer"
+                  />
+                ) : null}
+              </span>
+              <span className="text-sm text-gray-700">
+                {user.desc ? user.desc : null}
+              </span>
             </div>
           </div>
           <div className="profilerightbottom flex">
@@ -58,6 +69,7 @@ export default function Profile() {
             <Rightbar user={user} />
           </div>
         </div>
+        {showModal && <FormModal setShowModal={setShowModal}/>}
       </div>
     </>
   );

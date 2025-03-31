@@ -1,16 +1,15 @@
 import { useState, useRef, useContext } from "react";
+import AuthContext from "../../context/AuthContext";
 import { FaBattleNet } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-import { handleLogin } from "../../apiCall";
-import { AuthContext } from "../../context/AuthContext";
 import Loader from "../../components/Loader/Loader";
 
 export default function Login() {
   const email = useRef();
   const password = useRef();
 
-  const { user, isFetching, error, dispatch } = useContext(AuthContext);
-
+  const { handleLogin, isLoading, error } = useContext(AuthContext);
+  
   const [showPassword, setShowPassword] = useState(false);
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -18,13 +17,12 @@ export default function Login() {
 
   const handleClick = (e) => {
     e.preventDefault();
-    handleLogin(
-      { email: email.current.value, password: password.current.value },
-      dispatch
-    );
+    handleLogin({
+      email: email.current.value,
+      password: password.current.value,
+    });
   };
 
-  console.log(user);
   return (
     <>
       <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
@@ -83,8 +81,11 @@ export default function Login() {
               </a>
             </div>
             <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg transition-colors">
-              {isFetching ? <Loader /> : "Login"}
+              {isLoading ? <Loader /> : "Login"}
             </button>
+            <p className="text-[14px] text-center text-red-500">
+              {error ? error || "something went wrong" : null}
+            </p>
           </form>
           <div className="mt-6 text-center text-sm text-gray-600">
             {`Don't have an account?`}

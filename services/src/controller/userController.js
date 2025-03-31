@@ -51,7 +51,7 @@ exports.login = async (req, res) => {
 // Update user
 exports.updateUser = async (req, res) => {
   try {
-    if (req.body.userId === req.params.id || req.body.isAdmin) {
+    if (req.body.userId === req.params.id  ) {
       if (req.body.password) {
         try {
           const salt = await bcrypt.genSalt(10);
@@ -119,8 +119,27 @@ exports.getSingleUser = async (req, res) => {
   }
 };
 
+//Get users friends
+exports.getUsersFrineds = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    const friends = await Promise.all(
+      user.followings.map((friendId) => User.findById(friendId))
+    );
+    let friendList = [];
+    friends.map((friend) => {
+      const { _id, username, profilePicture,gender } = friend;
+      friendList.push({ _id, username, profilePicture ,gender});
+    });
+    res.status(200).json(friendList);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
 // Follow a user
 exports.followUser = async (req, res) => {
+  console.log("Hit The Follow Controller");
   if (req.body.userId !== req.params.id) {
     try {
       const user = await User.findById(req.params.id);
@@ -144,6 +163,7 @@ exports.followUser = async (req, res) => {
 
 // Unfollow a user
 exports.unfollowUser = async (req, res) => {
+  console.log("Hit The UnFollow Controller"); 
   if (req.body.userId !== req.params.id) {
     try {
       const user = await User.findById(req.params.id);
@@ -160,5 +180,16 @@ exports.unfollowUser = async (req, res) => {
     }
   } else {
     res.status(403).json({ message: "You can't unfollow yourself." });
+  }
+};
+
+//Search a users
+exports.findUser = async (req, res) => {
+  try {
+    const { username } = req.query;
+    const user = User.findOne({ username });
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(403).json({ message: "No user found..." });
   }
 };
