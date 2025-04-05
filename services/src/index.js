@@ -7,7 +7,9 @@ const cors = require("cors");
 const userRouter = require("./routes/users");
 const authRouter = require("./routes/auth");
 const postRouter = require("./routes/posts");
-const multer  = require('multer')
+const conversationRouter = require("./routes/conversations");
+const messageRouter = require("./routes/messages");
+const multer = require("multer");
 
 const app = express();
 dotenv.config();
@@ -15,7 +17,7 @@ port = process.env.PORT;
 
 // middleware
 app.use(express.json());
-app.use(express.urlencoded({extended: true}))
+app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(morgan("common"));
 app.use(cors());
@@ -26,6 +28,8 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/posts", postRouter);
+app.use("/api/conversations", conversationRouter);
+app.use("/api/messages", messageRouter);
 
 // DB-Connection
 async function connectDB() {

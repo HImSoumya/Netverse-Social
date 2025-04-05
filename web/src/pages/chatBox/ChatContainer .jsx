@@ -1,9 +1,27 @@
+import { useContext, useEffect, useState } from "react";
 import ChatOnline from "../../components/chatOnline/ChatOnline";
 import Conversation from "../../components/conversation/Conversation";
 import Header from "../../components/header/Header";
 import Message from "../../components/message/Message";
+import AuthContext from "../../context/AuthContext";
+import axios from "axios";
 
 const ChatContainer = () => {
+  const [conversation, setConversation] = useState([]);
+  const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+    const getConversations = async () => {
+      try {
+        const res = await axios.get(`/api/conversations/${user._id}`);
+        setConversation(res.data);
+      } catch (error) {
+        console.error("Error fetching conversations:", error);
+      }
+    };
+    getConversations();
+  }, [user._id]);
+
   return (
     <>
       <Header />
@@ -15,7 +33,9 @@ const ChatContainer = () => {
             className="w-full bg-gray-100 outline-none border-b border-slate-700 text-sm py-2 focus:border-indigo-500"
             placeholder="Search friends..."
           />
-          <Conversation />
+          {conversation.map((c) => (
+            <Conversation key={c._id} conversation={c} currentUser={user} />
+          ))}
         </div>
 
         {/* Chat Messages Section */}
@@ -28,7 +48,7 @@ const ChatContainer = () => {
             <Message />
           </div>
           <div className="w-full h-[120px] flex flex-col">
-            <textarea 
+            <textarea
               className="w-full border border-indigo-600 rounded-md px-2 py-1 focus:ring-2 focus:ring-indigo-400 outline-none text-sm"
               placeholder="Write..."
             ></textarea>
@@ -40,9 +60,11 @@ const ChatContainer = () => {
 
         {/* Online Friends Section */}
         <div className="flex-[3] p-[10px] h-full bg-gray-100 rounded-md shadow-md">
-          <h2 className="text-lg font-semibold text-gray-700">Online Friends</h2>
+          <h2 className="text-lg font-semibold text-gray-700">
+            Online Friends
+          </h2>
           <div className="mt-2">
-            <ChatOnline/>
+            <ChatOnline />
           </div>
         </div>
       </div>
