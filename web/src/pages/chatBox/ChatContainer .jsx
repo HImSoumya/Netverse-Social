@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import ChatOnline from "../../components/chatOnline/ChatOnline";
 import Conversation from "../../components/conversation/Conversation";
 import Header from "../../components/header/Header";
@@ -8,7 +8,12 @@ import axios from "axios";
 
 const ChatContainer = () => {
   const [conversation, setConversation] = useState([]);
+  const [currentChat, setCurrentChat] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
   const { user } = useContext(AuthContext);
+
+  const scrollRef = useRef();
 
   useEffect(() => {
     const getConversations = async () => {
@@ -22,6 +27,37 @@ const ChatContainer = () => {
     getConversations();
   }, [user._id]);
 
+  useEffect(() => {
+    const getMessages = async () => {
+      try {
+        const res = await axios.get(`/api/messages/${currentChat?._id}`);
+        setMessages(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getMessages();
+  }, [currentChat]);
+
+  const handleSave = async () => {
+    const message = {
+      sender: user._id,
+      text: newMessage,
+      conversationId: currentChat._id,
+    };
+    try {
+      const res = await axios.post("/api/messages", message);
+      setMessages([...messages, res.data]);
+      setNewMessage("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behaviour: "smooth" });
+  }, [messages]);
+
   return (
     <>
       <Header />
@@ -34,28 +70,44 @@ const ChatContainer = () => {
             placeholder="Search friends..."
           />
           {conversation.map((c) => (
-            <Conversation key={c._id} conversation={c} currentUser={user} />
+            <div onClick={() => setCurrentChat(c)} key={c._id}>
+              <Conversation conversation={c} currentUser={user} />
+            </div>
           ))}
         </div>
 
         {/* Chat Messages Section */}
+
         <div className="flex-[5.5] p-[10px] h-full flex flex-col">
-          <div className="flex-grow overflow-y-scroll py-1 scrollbar-thin scrollbar-thumb-indigo-500 scrollbar-track-gray-200">
-            <Message />
-            <Message own />
-            <Message />
-            <Message own />
-            <Message />
-          </div>
-          <div className="w-full h-[120px] flex flex-col">
-            <textarea
-              className="w-full border border-indigo-600 rounded-md px-2 py-1 focus:ring-2 focus:ring-indigo-400 outline-none text-sm"
-              placeholder="Write..."
-            ></textarea>
-            <button className="w-full px-1 py-2 bg-indigo-600 text-white text-sm mt-1 rounded-md hover:bg-indigo-800 transition">
-              Send
-            </button>
-          </div>
+          {currentChat ? (
+            <>
+              <div className="flex-grow overflow-y-scroll py-1 scrollbar-thin scrollbar-thumb-indigo-500 scrollbar-track-gray-200">
+                {messages.map((m) => (
+                  <div key={m._id} ref={scrollRef}>
+                    <Message message={m} own={m.sender === user._id} />
+                  </div>
+                ))}
+              </div>
+              <div className="w-full h-[120px] flex flex-col">
+                <textarea
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  className="w-full border border-indigo-600 rounded-md px-2 py-1 focus:ring-2 focus:ring-indigo-400 outline-none text-sm h-[100px]"
+                  placeholder="Write..."
+                ></textarea>
+                <button
+                  onClick={handleSave}
+                  className="w-full px-1 py-2 bg-indigo-600 text-white text-sm mt-1 rounded-md hover:bg-indigo-800 transition"
+                >
+                  Send
+                </button>
+              </div>
+            </>
+          ) : (
+            <span className=" text-wrap text-2xl px-2 py-8 mt-12 text-slate-500 shadow-md rounded-md border-t">
+              Greetings, Open a conversation to start chat
+            </span>
+          )}
         </div>
 
         {/* Online Friends Section */}
