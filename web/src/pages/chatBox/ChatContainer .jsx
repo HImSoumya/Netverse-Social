@@ -5,15 +5,39 @@ import Header from "../../components/header/Header";
 import Message from "../../components/message/Message";
 import AuthContext from "../../context/AuthContext";
 import axios from "axios";
+import { io } from "socket.io-client";
 
 const ChatContainer = () => {
   const [conversation, setConversation] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [onlineUsers, setOnlineUsers] = useState([]);
   const { user } = useContext(AuthContext);
 
   const scrollRef = useRef();
+  const socket = useRef();
+
+  useEffect(() => {
+    socket.current = io("http://localhost:8900");
+    socket.current.emit("addUser", user._id);
+  
+    socket.current.on("getUsers", (users) => {
+      setOnlineUsers(users.map((u) => u.userId));
+    });
+  
+    socket.current.on("getMessage", (data) => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: data.senderId,
+          text: data.text,
+          createdAt: new Date(),
+        },
+      ]);
+    });
+  }, [user._id]);
+  
 
   useEffect(() => {
     const getConversations = async () => {
@@ -45,6 +69,15 @@ const ChatContainer = () => {
       text: newMessage,
       conversationId: currentChat._id,
     };
+
+    const receiverId = currentChat.members.find((m) => m !== user._id);
+
+    socket.current.emit("sendMessage", {
+      senderId: user._id,
+      receiverId,
+      text: newMessage,
+    });
+
     try {
       const res = await axios.post("/api/messages", message);
       setMessages([...messages, res.data]);
@@ -116,7 +149,11 @@ const ChatContainer = () => {
             Online Friends
           </h2>
           <div className="mt-2">
-            <ChatOnline />
+            <ChatOnline
+              onlineUsers={onlineUsers}
+              currentId={user._id}
+              setCurrentChat={setCurrentChat}
+            />
           </div>
         </div>
       </div>
