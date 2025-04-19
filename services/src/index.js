@@ -13,7 +13,7 @@ const multer = require("multer");
 
 const app = express();
 dotenv.config();
-port = process.env.PORT;
+const port = process.env.PORT || 8800;
 
 // middleware
 app.use(express.json());
