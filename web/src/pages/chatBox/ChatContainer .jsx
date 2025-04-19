@@ -19,7 +19,7 @@ const ChatContainer = () => {
   const socket = useRef();
 
   useEffect(() => {
-    socket.current = io("http://localhost:8900");
+    socket.current = io(import.meta.env.VITE_SOCKET_URL);
     socket.current.emit("addUser", user._id);
   
     socket.current.on("getUsers", (users) => {
