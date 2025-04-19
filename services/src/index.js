@@ -24,6 +24,10 @@ app.use(cors());
 
 app.use("/uploads", express.static("uploads"));
 
+app.get("/", (req, res) => {
+  res.send("Backend is running 👍");
+});
+
 // Routes
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
