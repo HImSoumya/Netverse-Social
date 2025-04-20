@@ -71,7 +71,7 @@ export default function Sidebar() {
         </ul>
         <hr />
         <ul className="mt-6 flex flex-col  justify-start items-start gap-3">
-          <FriendList />
+          {/* <FriendList /> */}
         </ul>
       </div>
     </div>

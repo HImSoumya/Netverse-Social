@@ -19,7 +19,7 @@ export default function Rightbar({ user }) {
     const getFriends = async () => {
       try {
         const res = await axios.get(`/api/users/friends/${user._id}`);
-        setFriendList(res.data); 
+        setFriendList(res.data);
       } catch (error) {
         console.error("Error fetching friends:", error);
       }
@@ -91,7 +91,15 @@ export default function Rightbar({ user }) {
         <div className="mt-6">
           <h1 className="text-lg text-gray-600">Online Friends</h1>
           <ul className="mt-2 flex flex-col justify-center items-start gap-4">
-            <OnlineFriends />
+            {friendList.map((friend) => (
+              <Link
+                to={`/profile/${friend.username}`}
+                key={friend._id}
+                className=" cursor-pointer mb-4"
+              >
+                <OnlineFriends friend={friend} />
+              </Link>
+            ))}
           </ul>
         </div>
       </>
