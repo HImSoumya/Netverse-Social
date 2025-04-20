@@ -20,12 +20,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(morgan("common"));
-app.use(cors(
-  {
-    origin: 'http://localhost:5173', // e.g., if deployed on Netlify or Vercel
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-  }
-));
+
+const corsOptions = {
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  credentials: true, // add this if using cookies/auth headers
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
+ 
 
 app.use("/uploads", express.static("uploads"));
 
