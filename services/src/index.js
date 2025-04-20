@@ -24,7 +24,7 @@ app.use(cors());
 
 app.use("/uploads", express.static("uploads"));
 
-app.get("/", (req, res) => {
+app.get("/netverse", (req, res) => {
   res.send("Backend is running 👍");
 });
 
@@ -48,5 +48,5 @@ async function connectDB() {
 connectDB();
 
 app.listen(port, () => {
-  console.log(`server started at http://localhost:${port}`);
+  console.log(`Server running on port ${port}`);
 });
