@@ -4,6 +4,8 @@ import boyImg from "../../assets/boy.png";
 import girlImg from "../../assets/girl.png";
 
 export default function OnlineFriends({friend} ) {
+  console.log(friend);
+  
   return (
     <li className="flex justify-start items-center gap-2 relative">
       <img

@@ -88,7 +88,7 @@ export default function Rightbar({ user }) {
           </div>
         </div>
 
-        <div className="mt-6">
+        {/* <div className="mt-6">
           <h1 className="text-lg text-gray-600">Online Friends</h1>
           <ul className="mt-2 flex flex-col justify-center items-start gap-4">
             {friendList.map((friend) => (
@@ -101,7 +101,7 @@ export default function Rightbar({ user }) {
               </Link>
             ))}
           </ul>
-        </div>
+        </div> */}
       </>
     );
   };
