@@ -22,7 +22,7 @@ app.use(helmet());
 app.use(morgan("common"));
 app.use(cors(
   {
-    origin: 'http://localhost:5173/', // e.g., if deployed on Netlify or Vercel
+    origin: 'http://localhost:5173', // e.g., if deployed on Netlify or Vercel
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   }
 ));
