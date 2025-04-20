@@ -22,7 +22,7 @@ app.use(helmet());
 app.use(morgan("common"));
 
 const corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: 'https://netverse-social.vercel.app/',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   credentials: true, // add this if using cookies/auth headers
 };
